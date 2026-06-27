@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   THEME — change a value here and it updates across the whole app.
+   The @theme block exposes these to Tailwind as utility classes
+   (e.g. bg-primary, text-risk-red).
+--------------------------------------------------------------- */
+@theme {
+    --color-primary: #2563eb;
+    /* <- change this one line to re-brand */
+    --color-primary-dark: #1d4ed8;
+    --color-primary-light: #dbeafe;
+
+    --color-bg: #f1f5f9;
+    --color-surface: #ffffff;
+    --color-border: #e2e8f0;
+    --color-text: #0f172a;
+    --color-text-muted: #64748b;
+
+    /* Risk levels — used by the badges and row accents */
+    --color-risk-green: #16a34a;
+    --color-risk-yellow: #ca8a04;
+    --color-risk-orange: #ea580c;
+    --color-risk-red: #dc2626;
+}
+
+body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: system-ui, -apple-system, sans-serif;
+}
