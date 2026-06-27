@@ -5,6 +5,7 @@ import DashboardLayout from "./components/DashboardLayout";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import Placeholder from "./pages/Placeholder";
+import AnalyticsPage from "./pages/AnalyticsPage";
 
 const queryClient = new QueryClient();
 
@@ -40,8 +41,7 @@ export default function App() {
               />
               <Route
                 path="/analytics"
-                element={<Placeholder title="Analytics" description="Trends and fraud statistics" />}
-              />
+                element={<AnalyticsPage />} />
               <Route
                 path="/users"
                 element={<Placeholder title="Users" description="Cardholders and their profiles" />}

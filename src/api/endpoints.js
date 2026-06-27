@@ -13,3 +13,10 @@ export async function getRecentTransactions(limit = 50) {
     });
     return data;
 }
+
+
+// GET /api/admin/stats -> aggregate stats for the analytics page
+export async function getStats() {
+    const { data } = await client.get("/api/admin/stats");
+    return data;
+}
