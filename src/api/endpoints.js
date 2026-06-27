@@ -26,3 +26,18 @@ export async function getStats() {
     const { data } = await client.get("/api/admin/stats");
     return data;
 }
+
+
+// user endpoints
+
+// GET /api/profile/me -> the logged-in user's profile + completeness flag
+export async function getMyProfile() {
+    const { data } = await client.get("/api/profile/me");
+    return data;
+}
+
+// PUT /api/profile/me -> update the logged-in user's profile
+export async function updateMyProfile(payload) {
+    const { data } = await client.put("/api/profile/me", payload);
+    return data;
+}
