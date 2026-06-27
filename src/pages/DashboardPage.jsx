@@ -1,37 +1,35 @@
+import { useStats } from "../hooks/useStats";
 import { useTransactions } from "../hooks/useTransactions";
 import StatCard from "../components/StatCard";
 import TransactionTable from "../components/TransactionTable";
 
 export default function DashboardPage() {
-    const { data: transactions = [], isError, dataUpdatedAt } =
-        useTransactions(50);
-
-    const flagged = transactions.filter((t) =>
-        ["ORANGE", "RED"].includes(t.riskLevel)
-    ).length;
-    const blocked = transactions.filter((t) => t.riskLevel === "RED").length;
+    const { data: stats } = useStats();
+    const { data: transactions = [], isError } = useTransactions(10);
 
     return (
         <div>
-            <div className="mb-1 flex items-baseline justify-between">
-                <h1 className="text-2xl font-bold">Overview</h1>
-                <span className="text-xs text-text-muted">
-                    Updated {dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : "—"}
-                </span>
-            </div>
-            <p className="mb-6 text-sm text-text-muted">
-                Live transaction monitoring
-            </p>
+            <h1 className="mb-1 text-2xl font-bold">Overview</h1>
+            <p className="mb-6 text-sm text-text-muted">Live transaction monitoring</p>
 
-            <div className="mb-6 grid grid-cols-3 gap-4">
-                <StatCard label="Transactions" value={transactions.length} />
-                <StatCard label="Flagged" value={flagged} accent="text-risk-orange" />
-                <StatCard label="Blocked" value={blocked} accent="text-risk-red" />
+            {/* All-time totals */}
+            <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <StatCard label="Total Transactions" value={stats?.totalTransactions ?? "-"} />
+                <StatCard label="Flagged" value={stats?.flaggedCount ?? "-"} accent="text-risk-orange" />
+                <StatCard label="Blocked" value={stats?.blockedCount ?? "-"} accent="text-risk-red" />
             </div>
 
+            {/* Today */}
+            <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <StatCard label="Today's Transactions" value={stats?.todayTransactions ?? "—"} />
+                <StatCard label="Flagged Today" value={stats?.todayFlagged ?? "-"} accent="text-risk-orange" />
+                <StatCard label="Blocked Today" value={stats?.todayBlocked ?? "-"} accent="text-risk-red" />
+            </div>
+
+            <h2 className="mb-3 text-lg font-semibold">Recent Transactions</h2>
             {isError ? (
                 <div className="rounded-xl bg-primary-light p-4 text-sm text-risk-red">
-                    Couldn't load transactions. Is the backend running and is this an ADMIN account?
+                    Couldn't load transactions.
                 </div>
             ) : (
                 <TransactionTable transactions={transactions} />

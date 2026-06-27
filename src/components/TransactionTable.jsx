@@ -1,6 +1,12 @@
+import { useState } from "react";
+import { Eye } from "lucide-react";
 import RiskBadge from "./RiskBadge";
+import Modal from "./Modal";
+import TransactionDetail from "./TransactionDetail";
 
 export default function TransactionTable({ transactions }) {
+    const [selected, setSelected] = useState(null); // the transaction shown in the modal
+
     if (!transactions?.length) {
         return (
             <div className="rounded-xl border border-border bg-surface p-8 text-center text-text-muted">
@@ -9,15 +15,13 @@ export default function TransactionTable({ transactions }) {
         );
     }
 
-    const rows = transactions.slice(0, 10);
+    const rows = transactions
 
     return (
         <>
-            {/* ---------- Desktop / tablet: real table (md and up) ---------- */}
-            {/* overflow-x-auto is a safety net so it scrolls if the screen is just
-          slightly too narrow rather than overflowing the page. */}
+            {/* ---------- Desktop / tablet: table ---------- */}
             <div className="hidden overflow-x-auto rounded-xl border border-border bg-surface md:block">
-                <table className="w-full min-w-[720px] text-left text-sm">
+                <table className="w-full text-left text-sm">
                     <thead className="border-b border-border text-xs uppercase tracking-wide text-text-muted">
                         <tr>
                             <th className="px-4 py-3">Risk</th>
@@ -28,20 +32,16 @@ export default function TransactionTable({ transactions }) {
                             <th className="px-4 py-3">Decision</th>
                             <th className="px-4 py-3">Score</th>
                             <th className="px-4 py-3">Time</th>
+                            <th className="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {rows.map((t) => (
-                            <tr
-                                key={t.id}
-                                className="border-b border-border last:border-0 hover:bg-bg"
-                            >
+                            <tr key={t.id} className="border-b border-border last:border-0 hover:bg-bg">
                                 <td className="px-4 py-3">
                                     <RiskBadge level={t.riskLevel} />
                                 </td>
-                                <td className="px-4 py-3 font-medium">
-                                    ${Number(t.amount).toFixed(2)}
-                                </td>
+                                <td className="px-4 py-3 font-medium">${Number(t.amount).toFixed(2)}</td>
                                 <td className="px-4 py-3">{t.merchant}</td>
                                 <td className="px-4 py-3 text-text-muted">{t.merchantCategory}</td>
                                 <td className="px-4 py-3 text-text-muted">{t.channel}</td>
@@ -52,49 +52,49 @@ export default function TransactionTable({ transactions }) {
                                 <td className="px-4 py-3 text-text-muted">
                                     {new Date(t.transactionTime).toLocaleString()}
                                 </td>
+                                <td className="px-4 py-3">
+                                    <button
+                                        onClick={() => setSelected(t)}
+                                        className="rounded-lg p-1.5 text-text-muted hover:bg-primary-light hover:text-primary"
+                                        aria-label="View details"
+                                    >
+                                        <Eye size={18} />
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            {/* ---------- Mobile: stacked cards (below md) ---------- */}
+            {/* ---------- Mobile: cards ---------- */}
             <div className="space-y-3 md:hidden">
                 {rows.map((t) => (
-                    <div
+                    <button
                         key={t.id}
-                        className="rounded-xl border border-border bg-surface p-4"
+                        onClick={() => setSelected(t)}
+                        className="block w-full rounded-xl border border-border bg-surface p-4 text-left"
                     >
                         <div className="mb-2 flex items-center justify-between">
                             <RiskBadge level={t.riskLevel} />
-                            <span className="text-lg font-bold">
-                                ${Number(t.amount).toFixed(2)}
-                            </span>
+                            <span className="text-lg font-bold">${Number(t.amount).toFixed(2)}</span>
                         </div>
-
                         <div className="font-medium">{t.merchant}</div>
-                        <div className="mb-3 text-sm text-text-muted">
-                            {t.merchantCategory} · {t.channel}
+                        <div className="text-sm text-text-muted">
+                            {t.merchantCategory} · {t.channel} · {t.status}
                         </div>
-
-                        {/* Label/value grid for the remaining fields. */}
-                        <div className="grid grid-cols-2 gap-y-1 text-sm">
-                            <span className="text-text-muted">Decision</span>
-                            <span className="text-right">{t.status}</span>
-
-                            <span className="text-text-muted">Score</span>
-                            <span className="text-right tabular-nums">
-                                {t.fraudScore != null ? t.fraudScore.toFixed(4) : "—"}
-                            </span>
-
-                            <span className="text-text-muted">Time</span>
-                            <span className="text-right">
-                                {new Date(t.transactionTime).toLocaleString()}
-                            </span>
-                        </div>
-                    </div>
+                    </button>
                 ))}
             </div>
+
+            {/* Detail modal — shared by both layouts */}
+            <Modal
+                open={!!selected}
+                onClose={() => setSelected(null)}
+                title="Transaction Details"
+            >
+                <TransactionDetail t={selected} />
+            </Modal>
         </>
     );
 }
