@@ -41,3 +41,25 @@ export async function updateMyProfile(payload) {
     const { data } = await client.put("/api/profile/me", payload);
     return data;
 }
+
+
+
+
+
+// GET /api/me/accounts -> the logged-in user's accounts
+export async function getMyAccounts() {
+    const { data } = await client.get("/api/me/accounts");
+    return data;
+}
+
+// GET /api/merchants -> active merchants for the payment dropdown
+export async function getMerchants() {
+    const { data } = await client.get("/api/merchants");
+    return data;
+}
+
+// POST /api/transactions -> create a payment, returns the decision
+export async function createTransaction(payload) {
+    const { data } = await client.post("/api/transactions", payload);
+    return data;
+}

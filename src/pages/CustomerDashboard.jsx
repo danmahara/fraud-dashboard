@@ -7,6 +7,7 @@ import {
 import AppNavbar from "../components/AppNavbar";
 import { useMyProfile } from "../hooks/useProfile";
 import { useAuth } from "../context/AuthContext";
+import PaymentForm from "../components/PaymentForm";
 
 /* ─────────────────────────────────────────────
    Helpers
@@ -203,11 +204,8 @@ export default function CustomerDashboard() {
                                     Secured
                                 </span>
                             </div>
-                            <div className="flex items-center justify-center px-6 py-16 text-white/20">
-                                <div className="text-center">
-                                    <CreditCard size={32} className="mx-auto mb-3 opacity-20" />
-                                    <p className="text-[13px]">Payment form coming next</p>
-                                </div>
+                            <div className="px-6 py-5">
+                                <PaymentForm />
                             </div>
                         </div>
 
