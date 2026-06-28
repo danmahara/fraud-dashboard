@@ -12,6 +12,7 @@ import RegisterPage from "./pages/RegisterPage";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import WelcomePage from "./pages/WelcomePage";
 import OnboardingPage from "./pages/OnboardingPage";
+import UserTransactionsPage from "./pages/UserTransactionsPage";
 
 const queryClient = new QueryClient();
 
@@ -59,7 +60,7 @@ export default function App() {
             >
               <Route path="/user" element={<CustomerDashboard />} />
               <Route path="/user/onboarding" element={<OnboardingPage />} />
-              <Route path="/user/transactions" element={<Placeholder title="Transactions" description="Your transaction history" />} />
+              <Route path="/user/transactions" element={<UserTransactionsPage title="Transactions" description="Your transaction history" />} />
             </Route>
 
             {/* Redirect after login */}

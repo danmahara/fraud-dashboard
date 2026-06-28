@@ -8,6 +8,7 @@ import AppNavbar from "../components/AppNavbar";
 import { useMyProfile } from "../hooks/useProfile";
 import { useAuth } from "../context/AuthContext";
 import PaymentForm from "../components/PaymentForm";
+import { useMyStats, useMyTransactions } from "../hooks/usePayment";
 
 /* ─────────────────────────────────────────────
    Helpers
@@ -26,6 +27,29 @@ function formatGender(g) {
 function formatLocation(lat, lon) {
     if (!lat || !lon) return null;
     return `${parseFloat(lat).toFixed(4)}, ${parseFloat(lon).toFixed(4)}`;
+}
+
+
+// Map the backend risk level to the TxnRow status styles.
+function statusFromRisk(risk) {
+    switch (risk) {
+        case "GREEN":
+        case "YELLOW":
+            return "approved";
+        case "ORANGE":
+            return "verify";
+        case "RED":
+            return "blocked";
+        default:
+            return "approved";
+    }
+}
+
+function formatTime(ts) {
+    if (!ts) return "";
+    const d = new Date(ts);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+        + ", " + d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 }
 
 /* ─────────────────────────────────────────────
@@ -98,6 +122,12 @@ export default function CustomerDashboard() {
 
     const firstName = user?.name?.split(" ")[0] ?? "there";
 
+    const { data: stats } = useMyStats();
+    const { data: recentTxns } = useMyTransactions(10);
+
+    console.log("recent transactions: ", recentTxns);
+
+
     return (
         <div className="min-h-screen bg-[#0B1120] text-white">
             <main className="mx-auto max-w-4xl px-6 py-10">
@@ -156,7 +186,7 @@ export default function CustomerDashboard() {
                     <StatCard
                         icon={CreditCard}
                         label="Total txns"
-                        value="—"
+                        value={stats?.total ?? "—"}
                         sub="All time"
                         iconColor="text-[#00C2FF]"
                         iconBg="bg-[#00C2FF]/10"
@@ -164,7 +194,7 @@ export default function CustomerDashboard() {
                     <StatCard
                         icon={ShieldCheck}
                         label="Approved"
-                        value="—"
+                        value={stats?.approved ?? "—"}
                         sub="Passed instantly"
                         iconColor="text-[#00E5B8]"
                         iconBg="bg-[#00E5B8]/10"
@@ -172,7 +202,7 @@ export default function CustomerDashboard() {
                     <StatCard
                         icon={AlertCircle}
                         label="Flagged"
-                        value="—"
+                        value={stats?.flagged ?? "—"}
                         sub="Under review"
                         iconColor="text-[#F59E0B]"
                         iconBg="bg-[#F59E0B]/10"
@@ -180,7 +210,7 @@ export default function CustomerDashboard() {
                     <StatCard
                         icon={XCircle}
                         label="Blocked"
-                        value="—"
+                        value={stats?.blocked ?? "—"}
                         sub="Declined"
                         iconColor="text-[#EF4444]"
                         iconBg="bg-[#EF4444]/10"
@@ -225,11 +255,28 @@ export default function CustomerDashboard() {
                             </div>
                             <div className="px-6 py-2">
                                 {/* Placeholder rows — replace with real data */}
-                                <TxnRow emoji="🛒" name="Amazon Prime" amount="$14.99" status="approved" time="Today, 9:42 AM" />
+                                {/* <TxnRow emoji="🛒" name="Amazon Prime" amount="$14.99" status="approved" time="Today, 9:42 AM" />
                                 <TxnRow emoji="✈️" name="Qatar Airways" amount="$4,280.00" status="blocked" time="Today, 8:15 AM" />
                                 <TxnRow emoji="🍔" name="Shake Shack" amount="$22.40" status="approved" time="Yesterday, 1:10 PM" />
-                                <TxnRow emoji="💊" name="CVS Pharmacy" amount="$68.15" status="monitored" time="Yesterday, 11:05 AM" />
+                                <TxnRow emoji="💊" name="CVS Pharmacy" amount="$68.15" status="monitored" time="Yesterday, 11:05 AM" /> */}
+
+                                {recentTxns && recentTxns.length > 0 ? (
+                                    recentTxns.map((t) => (
+                                        <TxnRow
+                                            key={t.id}
+                                            name={t.merchant}
+                                            amount={`$${Number(t.amount).toLocaleString()}`}
+                                            status={statusFromRisk(t.riskLevel)}
+                                            time={formatTime(t.transactionTime)}
+                                        />
+                                    ))
+                                ) : (
+                                    <div className="py-8 text-center text-[13px] text-white/25">
+                                        No transactions yet
+                                    </div>
+                                )}
                             </div>
+
                         </div>
                     </div>
 

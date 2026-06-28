@@ -63,3 +63,26 @@ export async function createTransaction(payload) {
     const { data } = await client.post("/api/transactions", payload);
     return data;
 }
+
+
+
+// GET /api/me/stats -> this user's transaction totals
+export async function getMyStats() {
+    const { data } = await client.get("/api/me/stats");
+    return data;
+}
+
+// GET /api/me/transactions -> this user's recent transactions
+export async function getMyTransactions(limit = 10) {
+    const { data } = await client.get("/api/me/transactions", { params: { limit } });
+    return data;
+}
+
+
+// GET /api/me/transactions/page -> paginated transactions
+export async function getMyTransactionsPage(page = 0, size = 10) {
+    const { data } = await client.get("/api/me/transactions/page", {
+        params: { page, size },
+    });
+    return data;
+}
