@@ -14,6 +14,7 @@ import WelcomePage from "./pages/WelcomePage";
 import OnboardingPage from "./pages/OnboardingPage";
 import UserTransactionsPage from "./pages/UserTransactionsPage";
 import AdminTransactionsPage from "./pages/AdminTransactionsPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
 
 const queryClient = new QueryClient();
 
@@ -47,7 +48,7 @@ export default function App() {
               <Route path="/transactions" element={<AdminTransactionsPage />} />
               <Route path="/alerts" element={<Placeholder title="Alerts" description="Fraud alerts awaiting review" />} />
               <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/users" element={<Placeholder title="Users" description="Cardholders and their profiles" />} />
+              <Route path="/users" element={<AdminUsersPage />} />
               <Route path="/settings" element={<Placeholder title="Settings" description="System configuration" />} />
             </Route>
 

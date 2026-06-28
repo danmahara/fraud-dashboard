@@ -36,6 +36,17 @@ export async function getAdminTransactionsPage(page = 0, size = 20) {
 }
 
 
+// GET /api/admin/users -> list of all users
+export async function getAdminUsers() {
+    const { data } = await client.get("/api/admin/users");
+    return data;
+}
+
+// GET /api/admin/users/{id} -> one user's full detail
+export async function getAdminUserDetail(id) {
+    const { data } = await client.get(`/api/admin/users/${id}`);
+    return data;
+}
 
 
 // ###### user endpoints ######
