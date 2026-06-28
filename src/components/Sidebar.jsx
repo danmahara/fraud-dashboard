@@ -6,6 +6,8 @@ import {
     BarChart3,
     Users,
     Settings,
+    ShoppingBag,
+
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -15,6 +17,7 @@ const NAV_ITEMS = [
     { to: "/alerts", label: "Alerts", icon: ShieldAlert },
     { to: "/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/users", label: "Users", icon: Users },
+    { to: "/merchants", label: "Merchants", icon: ShoppingBag },
     { to: "/settings", label: "Settings", icon: Settings },
 ];
 

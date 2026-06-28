@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CreditCard, Loader2, CheckCircle2, ShieldAlert, XCircle, ChevronDown } from "lucide-react";
+import { CreditCard, Loader2, CheckCircle2, ShieldAlert, XCircle, ChevronDown, AlertCircle } from "lucide-react";
 import { useMyAccounts, useMerchants, useCreateTransaction } from "../hooks/usePayment";
 import { getDeviceInfo } from "../utils/device";
 
@@ -180,23 +180,28 @@ export default function PaymentForm() {
 
 function DecisionResult({ result }) {
     const map = {
-        APPROVED: {
+        GREEN: {
             icon: CheckCircle2, color: "#00E5B8",
             title: "Payment approved",
             body: "Your payment went through.",
         },
-        OTP_REQUIRED: {
-            icon: ShieldAlert, color: "#F59E0B",
+        YELLOW: {
+            icon: AlertCircle, color: "#F59E0B",
+            title: "Approved - monitored",
+            body: "Your payment went through, but we noticed something slightly unusual and flagged it for monitoring.",
+        },
+        ORANGE: {
+            icon: ShieldAlert, color: "#F97316",
             title: "Verification required",
             body: "This payment looked unusual, so we need to verify it's you.",
         },
-        DECLINED: {
+        RED: {
             icon: XCircle, color: "#EF4444",
             title: "Payment declined",
             body: "This payment was blocked as high-risk.",
         },
     };
-    const d = map[result.decision] ?? map.APPROVED;
+    const d = map[result.riskLevel] ?? map.GREEN;
     const Icon = d.icon;
 
     return (

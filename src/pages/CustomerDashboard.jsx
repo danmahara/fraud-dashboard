@@ -33,15 +33,11 @@ function formatLocation(lat, lon) {
 // Map the backend risk level to the TxnRow status styles.
 function statusFromRisk(risk) {
     switch (risk) {
-        case "GREEN":
-        case "YELLOW":
-            return "approved";
-        case "ORANGE":
-            return "verify";
-        case "RED":
-            return "blocked";
-        default:
-            return "approved";
+        case "GREEN": return "approved";
+        case "YELLOW": return "monitored";   // <-- changed from "approved"
+        case "ORANGE": return "verify";
+        case "RED": return "blocked";
+        default: return "approved";
     }
 }
 
@@ -124,9 +120,6 @@ export default function CustomerDashboard() {
 
     const { data: stats } = useMyStats();
     const { data: recentTxns } = useMyTransactions(10);
-
-    console.log("recent transactions: ", recentTxns);
-
 
     return (
         <div className="min-h-screen bg-[#0B1120] text-white">
