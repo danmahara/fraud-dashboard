@@ -28,7 +28,17 @@ export async function getStats() {
 }
 
 
-// user endpoints
+export async function getAdminTransactionsPage(page = 0, size = 20) {
+    const { data } = await client.get("/api/admin/transactions/page", {
+        params: { page, size },
+    });
+    return data;
+}
+
+
+
+
+// ###### user endpoints ######
 
 // GET /api/profile/me -> the logged-in user's profile + completeness flag
 export async function getMyProfile() {
@@ -41,9 +51,6 @@ export async function updateMyProfile(payload) {
     const { data } = await client.put("/api/profile/me", payload);
     return data;
 }
-
-
-
 
 
 // GET /api/me/accounts -> the logged-in user's accounts
